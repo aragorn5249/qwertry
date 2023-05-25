@@ -3,12 +3,20 @@ import cv2
 
 def preprocess(dataset: list[dict]) -> list[dict]:
     """
-    This function preprocesses the dataset
+    This function preprocesses the dataset by performing the following steps:
+    1) Convert images to grayscale images
+    2) Resize images
+    3) Normalize images -> all pixel values between 0 and 1
+    4) Perform image augmentation to enlarge datasset -> mirroring the images along the axes
+    5) Apply stratified k-fold cross-validation
 
     Parameters:
     -----------
     dataset: list(dict)
         dataset containing the labeled images
+
+    Calculated Parameters:
+    ----------------------
     data_fold_dict: dict
         dictionary containing all folds of the preprocessed dataset to be applied to the neural network
     """
