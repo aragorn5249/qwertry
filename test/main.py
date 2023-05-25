@@ -3,12 +3,13 @@ import pickle
 from preprocess import preprocess
 
 
-# Load the dataset
-
+# Load dataset
 print("\nLoading dataset ...")
 try:
     # Here the filepath to the dataset has to be inserted
-    with open("/home/patrick/Desktop/sviat_final_project/catvsnotcat_small.pkl", "rb") as f:
+    with open(
+        "/home/patrick/Desktop/sviat_final_project/catvsnotcat_small.pkl", "rb"
+    ) as f:
         dataset = pickle.load(f)
 except FileNotFoundError:
     print("Dataset file not found.")
@@ -27,4 +28,3 @@ Input layer:
 Output layer:
 1 single neuron
 """
-
