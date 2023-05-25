@@ -1,8 +1,4 @@
 import cv2
-import numpy as np
-import itertools
-
-from typing import Iterator
 
 
 def preprocess(dataset: list[dict]) -> list[dict]:
@@ -16,42 +12,17 @@ def preprocess(dataset: list[dict]) -> list[dict]:
     data_fold_dict: dict
         dictionary containing all folds of the preprocessed dataset to be applied to the neural network
     """
-    # Examine the dataset
-    nr_of_images: int = len(dataset)
-
-    image_distribution: dict[str, Iterator[int]] = {
-        "nr_cat_images": itertools.count(0),
-        "nr_no_cat_images": itertools.count(0),
-    }
-    [
-        next(image_distribution["nr_cat_images"])
-        if labeled_image["Y"] == "cat"
-        else next(image_distribution["nr_no_cat_images"])
-        for labeled_image in dataset
-    ]
-
-    image_shapes = [np.shape(np.array(labeled_image["X"])) for labeled_image in dataset]
-    image_shape_ranges: dict = {
-        "width_ranges": (
-            min(image_shapes, key=lambda x: x[0])[0],
-            max(image_shapes, key=lambda x: x[0])[0],
-        ),
-        "height_ranges": (
-            min(image_shapes, key=lambda x: x[1])[1],
-            max(image_shapes, key=lambda x: x[1])[1],
-        ),
-        "channel_ranges": (
-            min(image_shapes, key=lambda x: x[2])[2],
-            max(image_shapes, key=lambda x: x[2])[2],
-        ),
-    }
-    print("\nDataset metrics")
-    print(f"number of images: {nr_of_images}")
-    print(f"image distribution: {image_distribution}")
-    print(f"image shape ranges: {image_shape_ranges}")
+    
 
     # Preprocessing images in dataset
     print("\nPreprocessing the dataset ...")
+
+    # Convert images to grayscale images
+    print("- converting rbg images to grayscale images ...")
+    dataset_preprocessed = [
+        {"X": cv2.cvtColor(image["X"], cv2.COLOR_BGR2GRAY), "Y": image["Y"]}
+        for image in dataset
+    ]
 
     # Resize images to 128x128x3 pixels
     print("- resizing images to 128x128x3 pixels ...")
@@ -60,13 +31,6 @@ def preprocess(dataset: list[dict]) -> list[dict]:
             "X": cv2.resize(image["X"], (128, 128), interpolation=cv2.INTER_LANCZOS4),
             "Y": image["Y"],
         }
-        for image in dataset
-    ]
-
-    # Convert images to grayscale images
-    print("- converting rbg images to grayscale images ...")
-    dataset_preprocessed = [
-        {"X": cv2.cvtColor(image["X"], cv2.COLOR_BGR2GRAY), "Y": image["Y"]}
         for image in dataset_preprocessed
     ]
 
@@ -109,10 +73,10 @@ def preprocess(dataset: list[dict]) -> list[dict]:
     # Flip images along x-axis, y-axis and both axis
     print("- augmenting images ...")
     dataset_extension: list[dict] = []
-    for flip_direction in [None, 0, 1]:
+    for flip_direction in [-1, 0, 1]:
         dataset_extension.extend(
             [
-                {"X": np.flip(image["X"], flip_direction), "Y": image["Y"]}
+                {"X": cv2.flip(image["X"], flip_direction), "Y": image["Y"]}
                 for image in dataset_preprocessed
             ]
         )
@@ -132,7 +96,7 @@ def preprocess(dataset: list[dict]) -> list[dict]:
         for labeled_image in dataset_preprocessed
     ]
 
-    data_fold_dict: dict[str, list[dict]] = {
+    dataset_fold_dict: dict[str, list[dict]] = {
         f"fold_{i+1}": cat_images[
             int(i * len(cat_images) / k) : int((i + 1) * len(cat_images) / k)
         ]
@@ -141,12 +105,12 @@ def preprocess(dataset: list[dict]) -> list[dict]:
         ]
         for i in range(k)
     }
-    print(list(data_fold_dict.keys()))
+    print(list(dataset_fold_dict.keys()))
     print(
         f"with every fold containing: \n- {int(len(cat_images)/k)} cat_images\n- {int(len(no_cat_images)/k)} no_cat_images"
     )
 
-    return data_fold_dict
+    return dataset_fold_dict
 
 
 """

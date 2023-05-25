@@ -1,12 +1,13 @@
 import pickle
 
-from preprocess import preprocess
+from analysis import analyze
+from preprocessing import preprocess
 
 
 # Load dataset
 print("\nLoading dataset ...")
 try:
-    # Here the filepath to the dataset has to be inserted
+    # Here the filepath to the dataset has to be inserted!!!
     with open(
         "/home/patrick/Desktop/sviat_final_project/catvsnotcat_small.pkl", "rb"
     ) as f:
@@ -18,9 +19,11 @@ except Exception as e:
     print("Error loading dataset:", str(e))
     exit()
 
+# Analyze dataset
+analyze(dataset)
 
 # Preprocess dataset
-data_fold_dict = preprocess(dataset)
+dataset_fold_dict:dict[str, list[dict]] = preprocess(dataset)
 
 """
 Input layer:
