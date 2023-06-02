@@ -1,5 +1,6 @@
 import cv2
 import numpy as np
+import random
 
 
 def preprocess(dataset: list[dict]) -> list[dict]:
@@ -23,7 +24,7 @@ def preprocess(dataset: list[dict]) -> list[dict]:
     """
 
     # Preprocessing images in dataset
-    print("\nPreprocessing the dataset ...")
+    print("\nPreprocessing dataset")
 
     # Convert images to grayscale images
     print("- converting rbg images to grayscale images ...")
@@ -95,38 +96,71 @@ def preprocess(dataset: list[dict]) -> list[dict]:
 
     # Flatten all images
     print("- flattening images to 1-D array...")
-    dataset_preprocessed = [{"X": np.asarray(image["X"].flatten()), "Y": image["Y"]} for image in dataset_preprocessed]
+    dataset_preprocessed = [
+        {"X": np.asarray(image["X"].flatten()), "Y": image["Y"]}
+        for image in dataset_preprocessed
+    ]
 
 
-    # Split the dataset for stratified k-fold cross-validation (with k=5)
-    k = 5
-    print(f"\nSplitting dataset into {k} stratified folds ...")
+    # Split dataset into training set (= 90% of the images) and test set (= 10% of the images)
+    print(f"- splitting dataset into training set and test set ...")
+    split_percentage_training_dataset = 0.9
     cat_images: list[dict] = []
     no_cat_images: list[dict] = []
     [
-        cat_images.append({"X": np.asarray(labeled_image), "Y": labeled_image["Y"]})
+        cat_images.append(labeled_image)
         if labeled_image["Y"] == "cat"
-        else no_cat_images.append(
-            {"X": np.asarray(labeled_image), "Y": labeled_image["Y"]}
-        )
+        else no_cat_images.append(labeled_image)
         for labeled_image in dataset_preprocessed
     ]
-
-    dataset_fold_dict: dict[str, list[dict]] = {
-        f"fold_{i+1}": cat_images[
-            int(i * len(cat_images) / k) : int((i + 1) * len(cat_images) / k)
-        ]
-        + no_cat_images[
-            int((i * len(no_cat_images) / k)) : int((i + 1) * len(no_cat_images) / k)
-        ]
-        for i in range(k)
-    }
-    print(list(dataset_fold_dict.keys()))
-    print(
-        f"with every fold containing: \n- {int(len(cat_images)/k)} cat_images\n- {int(len(no_cat_images)/k)} no_cat_images"
+    training_dataset = (
+        cat_images[: int(split_percentage_training_dataset * len(cat_images))]
+        + no_cat_images[: int(split_percentage_training_dataset * len(no_cat_images))]
     )
+    test_dataset = (
+        cat_images[int(split_percentage_training_dataset * len(cat_images)) :]
+        + no_cat_images[int(split_percentage_training_dataset * len(no_cat_images)) :]
+    )
+    np.random.shuffle(training_dataset)
+    np.random.shuffle(test_dataset)
+    print(f"   -> size of training set: {len(training_dataset)}")
+    print(f"   -> size of test set: {len(test_dataset)}")
 
-    return dataset_fold_dict
+
+    return training_dataset, test_dataset
+
+
+"""
+# Split the dataset for stratified k-fold cross-validation (with k=5)
+k = 5
+print(f"\nSplitting dataset into {k} stratified folds ...")
+cat_images: list[dict] = []
+no_cat_images: list[dict] = []
+[
+    cat_images.append({"X": np.asarray(labeled_image), "Y": labeled_image["Y"]})
+    if labeled_image["Y"] == "cat"
+    else no_cat_images.append(
+        {"X": np.asarray(labeled_image), "Y": labeled_image["Y"]}
+    )
+    for labeled_image in dataset_preprocessed
+]
+
+dataset_fold_dict: dict[str, list[dict]] = {
+    f"fold_{i+1}": cat_images[
+        int(i * len(cat_images) / k) : int((i + 1) * len(cat_images) / k)
+    ]
+    + no_cat_images[
+        int((i * len(no_cat_images) / k)) : int((i + 1) * len(no_cat_images) / k)
+    ]
+    for i in range(k)
+}
+print(list(dataset_fold_dict.keys()))
+print(
+    f"with every fold containing: \n- {int(len(cat_images)/k)} cat_images\n- {int(len(no_cat_images)/k)} no_cat_images"
+)
+
+return dataset_fold_dict
+"""
 
 
 """

@@ -1,6 +1,6 @@
 import pickle
 
-from code.dataset_analysis import analyze
+from dataset_analysis import analyze
 from preprocessing import preprocess
 
 
@@ -23,7 +23,7 @@ except Exception as e:
 analyze(dataset)
 
 # Preprocess dataset
-dataset_fold_dict:dict[str, list[dict]] = preprocess(dataset)
+training_dataset, test_dataset = preprocess(dataset)
 
 """
 Input layer:
@@ -33,11 +33,18 @@ Output layer:
 """
 
 # Defining neural network structure
-### CONSTANTS DEFINING THE MODEL ####
-n_x = train_set_x_flatten.shape[0]     # size of input layer
-n_y = 1  # size of output layer, will be 0 or 1
-    # we define a neural network with total 5 layers, x, y and 3 hidden:
-    # the first hidden has 20 units, second has 7 units and third has 5
-nn_layers = [n_x, 20, 7, 5, n_y]  # length is 5 (layers)
- 
-nn_layers
+# size of input layers
+INPUT_LAYER_SIZE:int = training_dataset[0]["X"].size
+# size of output layer -> 1 since we want to get only a probablity value
+OUTPUT_LAYER_SIZE:int = 1
+# length of array corresponds to the number of hidden layers (here 3 hidden layers) with the values being the respective sizes
+HIDDEN_LAYER_SIZES:list[int] = [20, 7, 5] 
+
+nn_layers = [INPUT_LAYER_SIZE] + HIDDEN_LAYER_SIZES + [OUTPUT_LAYER_SIZE]
+# print(nn_layers)
+print(f"\nNeural network properties:")
+print(f"size of input_layer: {INPUT_LAYER_SIZE}")
+[print(f"size of hidden_layer_{i+1}: {layer_size}") for i, layer_size in enumerate(HIDDEN_LAYER_SIZES)]
+print(f"size of output_layer: {OUTPUT_LAYER_SIZE}")
+
+
