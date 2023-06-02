@@ -1,6 +1,6 @@
 import pickle
 
-from analysis import analyze
+from code.dataset_analysis import analyze
 from preprocessing import preprocess
 
 
@@ -31,3 +31,13 @@ Input layer:
 Output layer:
 1 single neuron
 """
+
+# Defining neural network structure
+### CONSTANTS DEFINING THE MODEL ####
+n_x = train_set_x_flatten.shape[0]     # size of input layer
+n_y = 1  # size of output layer, will be 0 or 1
+    # we define a neural network with total 5 layers, x, y and 3 hidden:
+    # the first hidden has 20 units, second has 7 units and third has 5
+nn_layers = [n_x, 20, 7, 5, n_y]  # length is 5 (layers)
+ 
+nn_layers

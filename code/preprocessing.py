@@ -1,4 +1,5 @@
 import cv2
+import numpy as np
 
 
 def preprocess(dataset: list[dict]) -> list[dict]:
@@ -20,7 +21,6 @@ def preprocess(dataset: list[dict]) -> list[dict]:
     data_fold_dict: dict
         dictionary containing all folds of the preprocessed dataset to be applied to the neural network
     """
-    
 
     # Preprocessing images in dataset
     print("\nPreprocessing the dataset ...")
@@ -92,15 +92,23 @@ def preprocess(dataset: list[dict]) -> list[dict]:
     dataset_preprocessed = dataset_preprocessed + dataset_extension
     print(f"   -> new size of dataset: {len(dataset_preprocessed)}")
 
+
+    # Flatten all images
+    print("- flattening images to 1-D array...")
+    dataset_preprocessed = [{"X": np.asarray(image["X"].flatten()), "Y": image["Y"]} for image in dataset_preprocessed]
+
+
     # Split the dataset for stratified k-fold cross-validation (with k=5)
     k = 5
-    print(f"\nSplitting dataset into {k} folds ...")
+    print(f"\nSplitting dataset into {k} stratified folds ...")
     cat_images: list[dict] = []
     no_cat_images: list[dict] = []
     [
-        cat_images.append(labeled_image)
+        cat_images.append({"X": np.asarray(labeled_image), "Y": labeled_image["Y"]})
         if labeled_image["Y"] == "cat"
-        else no_cat_images.append(labeled_image)
+        else no_cat_images.append(
+            {"X": np.asarray(labeled_image), "Y": labeled_image["Y"]}
+        )
         for labeled_image in dataset_preprocessed
     ]
 
