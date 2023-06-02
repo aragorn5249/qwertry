@@ -1,19 +1,31 @@
 # here goes the code for the result analysis
-
-def result_analysis(parameters, X, Y):
+def predict(X, y, parameters):
     """
-    Analyze the results of the trained model
-
+    This function is used to predict the results of a  L-layer neural network.
+ 
     Arguments:
-    parameters -- a dictionary containing the trained parameters
-    X -- input data of shape (input size = 2, number of examples = 200)
-    Y -- true "label" vector (containing 0 if non-cat, 1 if cat), shape (1, number of examples)
-
+    X -- data set of examples you would like to label
+    parameters -- parameters of the trained model
+ 
     Returns:
-    predictions -- vector of predictions of the model (red: 0 / blue: 1)
+    p -- predictions for the given dataset X
     """
-
-    A2, cache = forward_propagation(X, parameters)
-    predictions = (A2 > 0.5)
-
-    return predictions
+ 
+    m = X.shape[1]
+    n = len(parameters) // 2 # number of layers in the neural network
+    p = np.zeros((1,m))
+ 
+    # Forward propagation
+    probas, caches = L_model_forward(X, parameters)
+ 
+    # convert probs to 0/1 predictions
+    for i in range(0, probas.shape[1]):
+        if probas[0,i] &amp;gt; 0.5:
+            p[0,i] = 1
+        else:
+            p[0,i] = 0
+ 
+    # print results
+    print("Accuracy: "  + str(np.sum((p == y)/m)))
+ 
+    return p
