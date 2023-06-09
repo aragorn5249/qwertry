@@ -1,5 +1,5 @@
-#  FUNCTION: linear_forward
 import numpy as np
+
 
 
 def linear_forward(A, W, b):
@@ -15,7 +15,6 @@ def linear_forward(A, W, b):
     Z -- the input of the activation function, also called pre-activation parameter
     cache -- a python dictionary containing "A", "W" and "b" ; stored for computing the backward pass efficiently
     """
-
     Z = np.dot(W, A) + b
 
     assert Z.shape == (W.shape[0], A.shape[1])
@@ -23,8 +22,6 @@ def linear_forward(A, W, b):
 
     return Z, cache
 
-
-#  FUNCTION: sigmoid
 
 
 def sigmoid(Z):
@@ -38,11 +35,11 @@ def sigmoid(Z):
     A -- output of sigmoid(z), same shape as Z
     cache -- returns Z as well, useful during backpropagation
     """
-
     A = 1 / (1 + np.exp(-Z))
     cache = Z
 
     return A, cache
+
 
 
 def relu(Z):
@@ -56,7 +53,6 @@ def relu(Z):
     A -- Post-activation parameter, of the same shape as Z
     cache -- a python dictionary containing "A" ; stored for computing the backward pass efficiently
     """
-
     A = np.maximum(0, Z)
 
     assert A.shape == Z.shape
@@ -64,8 +60,6 @@ def relu(Z):
     cache = Z
     return A, cache
 
-
-# FUNCTION: linear_activation_forward
 
 
 def linear_activation_forward(A_prev, W, b, activation):
@@ -98,8 +92,6 @@ def linear_activation_forward(A_prev, W, b, activation):
     return A, cache
 
 
-#  FUNCTION: L_model_forward
-
 
 def L_model_forward(X, parameters):
     """
@@ -115,7 +107,6 @@ def L_model_forward(X, parameters):
                 every cache of linear_relu_forward() (there are L-1 of them, indexed from 0 to L-2)
                 the cache of linear_sigmoid_forward() (there is one, indexed L-1)
     """
-
     caches = []
     A = X
     L = len(parameters) // 2  # number of layers in the neural network
@@ -135,4 +126,5 @@ def L_model_forward(X, parameters):
     caches.append(cache)
 
     assert Yhat.shape == (1, X.shape[1])
+
     return Yhat, caches

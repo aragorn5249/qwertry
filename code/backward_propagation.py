@@ -1,6 +1,7 @@
 import numpy as np
-#  FUNCTION: linear_backward
- 
+
+
+
 def linear_backward(dZ, cache):
     """
     Implement the linear portion of backward propagation for a single layer (layer l)
@@ -27,6 +28,8 @@ def linear_backward(dZ, cache):
  
     return dA_prev, dW, db
 
+
+
 def sigmoid_backward(dA, cache):
     """
     Implement the backward propagation for a single SIGMOID unit.
@@ -48,6 +51,8 @@ def sigmoid_backward(dA, cache):
  
     return dZ
 
+
+
 def relu_backward(dA, cache):
     """
     Implement the backward propagation for a single RELU unit.
@@ -62,9 +67,12 @@ def relu_backward(dA, cache):
  
     Z = cache
     dZ = np.array(dA, copy=True) # just converting dz to a correct object.
- 
+    
+    print(dZ)
+    a=1
     # When z &amp;lt;= 0, you should set dz to 0 as well.
-    dZ[Z &amp;lt;= 0] = 0          assert (dZ.shape == Z.shape)          return dZ
+    #dZ[Z &amp;lt;= 0] = 0          assert (dZ.shape == Z.shape)          return dZ
+
 
 
 #  FUNCTION: linear_activation_backward 

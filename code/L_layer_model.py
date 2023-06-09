@@ -1,4 +1,5 @@
 #  FUNCTION: L_layer_model
+import numpy as np
 import matplotlib.pyplot as plt
 
 from initialise_parameters import initialise_parameters
