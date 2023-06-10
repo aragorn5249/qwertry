@@ -1,0 +1,11 @@
+User defined parameters:
+- desired image size: (64, 64)
+- input layer size: 4096
+- hidden layer sizes: [20, 7, 5]
+- output layer size: 1
+- number of iterations: 3000
+- learning rate: 0.0075
+
+Result:
+- accuracy trainingset: 0.756
+- accuracy test set: 0.766

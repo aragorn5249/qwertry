@@ -4,7 +4,7 @@ import numpy as np
 from typing import Iterator
 
 
-def analyze(dataset:list[dict]) -> None:
+def analyze(dataset: list[dict]) -> None:
     """
     This function analyzes the dataset regarding
     - number of images contained

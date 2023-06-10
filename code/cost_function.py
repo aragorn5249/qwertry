@@ -2,22 +2,26 @@
 import numpy as np
 
 
-def compute_cost(Yhat, Y):
+def compute_cost(Y_hat: np.ndarray, Y: np.ndarray) -> float:
     """
     Implement the cross-entropy cost function
 
-    Arguments:
-    Yhat -- probability vector corresponding to the label predictions, shape (1, number of examples)
-    Y -- true "label" vector (for example: containing 0 if non-cat, 1 if cat), shape (1, number of examples)
+    Parameters:
+    -----------
+    Y_hat : np.ndarray
+        probability vector corresponding to the label predictions, shape (1, number of examples)
+    Y : np.ndarray
+        true "label" vector (for example: containing 0 if non-cat, 1 if cat), shape (1, number of examples)
 
     Returns:
-    cost -- cross-entropy cost
+    --------
+    cost : float
+        cross-entropy cost
     """
-
     m = Y.shape[1]
 
     # Compute loss from AL and Y.
-    logprobs = np.dot(Y, np.log(Yhat).T) + np.dot((1 - Y), np.log(1 - Yhat).T)
+    logprobs = np.dot(Y, np.log(Y_hat).T) + np.dot((1 - Y), np.log(1 - Y_hat).T)
 
     cost = (-1.0 / m) * logprobs
 
