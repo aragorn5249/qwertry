@@ -18,7 +18,7 @@ TRAIN_NETWORK: bool = False                      # specifiy if network shall be 
 if TRAIN_NETWORK:
     STORE_PARAMETERS_AND_RESULT: bool = False   # specify if user defined parameters, network parameters and result shall be stored in result.txt file
     HIDDEN_LAYER_SIZES: list[int] = [20, 7, 5]  # length of array corresponds to the number of hidden layers (here 3 hidden layers) with the values being the respective sizes
-    NUMBER_OF_ITERATIONS: int = 3#000            # number of training iterations
+    NUMBER_OF_ITERATIONS: int = 3000            # number of training iterations
     LEARNING_RATE: float = 0.0075               # step size the grandient descent is moving forward -> has to be a value in the range of [0,1]
 
 # Type-check user defined parameters
